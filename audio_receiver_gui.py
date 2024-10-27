@@ -217,5 +217,5 @@ class AudioReceiverGUI(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = AudioReceiverGUI()
-    ex.hide()
+    ex.show()
     sys.exit(app.exec_())
