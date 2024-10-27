@@ -2,6 +2,31 @@
 
 This project consists of two Python scripts that work together to create an audio streaming system. The `audio_streamer.py` captures audio from a microphone and streams it over a network to a receiver, while the `audio_receiver.py` receives the audio stream and plays it through a virtual audio device which acts as a virtual microphone/input.
 
+## Background
+
+This project was born out of a need for remote microphone input in a GPU-partitioned Hyper-V VM setup. The broader context involves:
+
+- A single, powerful computer running in a centralized location (e.g., basement)
+- Multiple VMs running on this computer, each serving as a personal computer for family members
+- Sunshine installed on each VM to stream the desktop
+- Thin clients (like OPi 5+ or RPi 5) running Moonlight to connect to these streams
+
+This setup offers several advantages:
+1. Cost-effective: One powerful computer instead of multiple individual PCs
+2. Space-saving: Thin clients take up minimal space in living areas
+3. Centralized management: Easier to maintain and upgrade a single system
+
+However, this setup faced a challenge: Moonlight, the streaming client, doesn't support microphone input. This Audio Streaming System aims to solve that problem by allowing remote microphone streaming from the thin clients to the VMs.
+
+## Project Overview
+
+The Audio Streaming System consists of two main components:
+
+1. `audio_streamer.py`: Runs on the thin client, capturing audio from the local microphone and streaming it over the network.
+2. `audio_receiver.py`: Runs on the VM, receiving the audio stream and playing it through a virtual audio device, effectively creating a virtual microphone input.
+
+This solution enables full audio input functionality in the GPU-partitioned VM setup, complementing the Sunshine/Moonlight streaming system.
+
 ## Requirements
 
 - Windows operating system
