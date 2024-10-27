@@ -71,7 +71,7 @@ This solution enables full audio input functionality in the GPU-partitioned VM s
 
 ## Important Notes
 
-- This system is designed for Windows only.
+- This system has only been designed and tested on windows, but *should* work on linux?
 - The computer running the audio receiver must have the VB-CABLE Virtual Audio Device installed.
 - Ensure that your firewall allows the connection between the streamer and receiver.
 - The audio quality and latency may vary depending on your network conditions.
