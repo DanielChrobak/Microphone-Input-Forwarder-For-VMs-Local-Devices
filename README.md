@@ -100,7 +100,7 @@ Replace `<host>` with the IP address of the streaming computer and `<port>` with
 
 ## Important Notes
 
-- This system has been designed and tested on Windows, but should work on Linux as well with some changes to the input and outputs..
+- This system has been designed and tested on Windows, but should work on Linux as well with some changes to the input and output.
 - The computer running the audio receiver must have the VB-CABLE Virtual Audio Device installed.
 - Ensure that your firewall allows the connection between the streamer and receiver.
 - The audio quality and latency may vary depending on your network conditions.
