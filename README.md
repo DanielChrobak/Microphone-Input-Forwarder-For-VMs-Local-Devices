@@ -29,7 +29,7 @@ This project consists of two Python scripts that work together to create an audi
 
 1. Run the audio streamer on the computer that will capture and send microphone audio:
 
-python audio_streamer.py
+> python audio_streamer.py
 
 2. Enter the desired port number in the GUI.
 
@@ -39,7 +39,7 @@ python audio_streamer.py
 
 1. Run the audio receiver on the computer that will play the streamed audio:
 
-python audio_receiver.py
+> python audio_receiver.py
 
 2. Enter the IP address of the streaming computer and the port number used by the streamer.
 
