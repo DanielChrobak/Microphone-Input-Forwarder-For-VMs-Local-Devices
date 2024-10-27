@@ -29,7 +29,6 @@ This solution enables full audio input functionality in the GPU-partitioned VM s
 
 ## Requirements
 
-- Windows operating system
 - Python 3.7+
 - PyQt5
 - PyAudio
