@@ -20,28 +20,32 @@ However, this setup faced a challenge: Moonlight, the streaming client, doesn't 
 
 ## Project Overview
 
-The Audio Streaming System consists of two main components:
+The Audio Streaming System consists of two main components, each available in both GUI and CLI versions:
 
-1. `audio_streamer_gui.py`: Runs on the thin client, capturing audio from the local microphone and streaming it over the network.
-2. `audio_receiver_gui.py`: Runs on the VM, receiving the audio stream and playing it through a virtual audio device, effectively creating a virtual microphone input.
+1. Audio Streamer: Runs on the thin client, capturing audio from the local microphone and streaming it over the network.
+2. Audio Receiver: Runs on the VM, receiving the audio stream and playing it through a virtual audio device, effectively creating a virtual microphone input.
 
 This solution enables full audio input functionality in the GPU-partitioned VM setup, complementing the Sunshine/Moonlight streaming system.
 
 ## Requirements
 
 - Python 3.7+
-- PyQt5
 - PyAudio
-- NumPy
 - VB-CABLE Virtual Audio Device (for the receiver device)
+- PyQt5 (for GUI versions only)
+- NumPy (for GUI versions only)
 
 ## Installation
 
-1. Clone this repository or download the `audio_streamer_gui.py` and `audio_receiver_gui.py` files.
+1. Clone this repository or download the audio streamer and receiver files.
 
 2. Install the required Python packages:
 
-> pip install pyqt5 pyaudio numpy
+   For CLI versions:
+   > pip install pyaudio
+
+   For GUI versions:
+   > pip install pyqt5 pyaudio numpy
 
 3. On the receiving computer, install the VB-CABLE Virtual Audio Device:
 - Download and install VB-CABLE from [https://vb-audio.com/Cable/](https://vb-audio.com/Cable/)
@@ -49,29 +53,54 @@ This solution enables full audio input functionality in the GPU-partitioned VM s
 
 ## Usage
 
-### Audio Streamer
+### CLI Versions
+
+#### Audio Streamer (CLI)
 
 1. Run the audio streamer on the computer that will capture and send microphone audio:
 
-> python audio_streamer.py
+> python audio_streamer.py <port>
+
+Replace `<port>` with the desired port number.
+
+2. The streamer will start waiting for a connection on the specified port.
+
+#### Audio Receiver (CLI)
+
+1. Run the audio receiver on the computer that will play the streamed audio:
+
+> python audio_receiver.py <host> <port>
+
+Replace `<host>` with the IP address of the streaming computer and `<port>` with the port number used by the streamer.
+
+2. The receiver will attempt to connect to the streamer and start playing the received audio through the VB-CABLE device.
+
+### GUI Versions
+
+#### Audio Streamer (GUI)
+
+1. Run the audio streamer on the computer that will capture and send microphone audio:
+
+> python audio_streamer_gui.py
 
 2. Enter the desired port number in the GUI.
 
 3. Click "Start Streaming" to begin capturing and streaming audio.
 
-### Audio Receiver
+#### Audio Receiver (GUI)
 
 1. Run the audio receiver on the computer that will play the streamed audio:
 
-> python audio_receiver.py
+> python audio_receiver_gui.py
 
 2. Enter the IP address of the streaming computer and the port number used by the streamer.
 
 3. Click "Start Receiving" to begin receiving and playing the audio stream.
 
+
 ## Important Notes
 
-- This system has only been designed and tested on Windows, but *should* work on Linux?
+- This system has been designed and tested on Windows, but should work on Linux as well.
 - The computer running the audio receiver must have the VB-CABLE Virtual Audio Device installed.
 - Ensure that your firewall allows the connection between the streamer and receiver.
 - The audio quality and latency may vary depending on your network conditions.
