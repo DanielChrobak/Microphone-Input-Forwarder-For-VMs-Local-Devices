@@ -17,7 +17,7 @@ This project consists of two Python scripts that work together to create an audi
 
 2. Install the required Python packages:
 
-pip install pyqt5 pyaudio numpy
+> pip install pyqt5 pyaudio numpy
 
 3. On the receiving computer, install the VB-CABLE Virtual Audio Device:
 - Download and install VB-CABLE from [https://vb-audio.com/Cable/](https://vb-audio.com/Cable/)
