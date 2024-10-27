@@ -1,6 +1,6 @@
 # Audio Streaming System
 
-This project consists of two Python scripts that work together to create an audio streaming system. The `audio_streamer.py` captures audio from a microphone and streams it over a network to a receiver, while the `audio_receiver.py` receives the audio stream and plays it through a virtual audio device which acts as a virtual microphone/input.
+This project consists of two Python scripts that work together to create an audio streaming system. The `audio_streamer_gui.py` captures audio from a microphone and streams it over a network to a receiver, while the `audio_receiver_gui.py` receives the audio stream and plays it through a virtual audio device which acts as a virtual microphone/input.
 
 ## Background
 
@@ -22,8 +22,8 @@ However, this setup faced a challenge: Moonlight, the streaming client, doesn't 
 
 The Audio Streaming System consists of two main components:
 
-1. `audio_streamer.py`: Runs on the thin client, capturing audio from the local microphone and streaming it over the network.
-2. `audio_receiver.py`: Runs on the VM, receiving the audio stream and playing it through a virtual audio device, effectively creating a virtual microphone input.
+1. `audio_streamer_gui.py`: Runs on the thin client, capturing audio from the local microphone and streaming it over the network.
+2. `audio_receiver_gui.py`: Runs on the VM, receiving the audio stream and playing it through a virtual audio device, effectively creating a virtual microphone input.
 
 This solution enables full audio input functionality in the GPU-partitioned VM setup, complementing the Sunshine/Moonlight streaming system.
 
@@ -37,7 +37,7 @@ This solution enables full audio input functionality in the GPU-partitioned VM s
 
 ## Installation
 
-1. Clone this repository or download the `audio_streamer.py` and `audio_receiver.py` files.
+1. Clone this repository or download the `audio_streamer_gui.py` and `audio_receiver_gui.py` files.
 
 2. Install the required Python packages:
 
