@@ -1,6 +1,6 @@
 # Audio Streaming System
 
-This project consists of two Python scripts that work together to create an audio streaming system. The `audio_streamer_gui.py` captures audio from a microphone and streams it over a network to a receiver, while the `audio_receiver_gui.py` receives the audio stream and plays it through a virtual audio device which acts as a virtual microphone/input.
+This project consists of two Python scripts that work together to create an audio streaming system. The `audio_streamer_gui.py` and `audio_streamer.py` capture audio from a microphone and streams it over a network to a receiver, while the `audio_receiver_gui.py` and `audio_receiver.py` receive the audio stream and plays it through a virtual audio device which acts as a virtual microphone/input.
 
 ## Background
 
