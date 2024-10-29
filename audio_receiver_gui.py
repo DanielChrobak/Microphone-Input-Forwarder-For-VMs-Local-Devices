@@ -3,17 +3,18 @@ import pyaudio
 import socket
 import struct
 import numpy as np
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QProgressBar, QSystemTrayIcon, QMenu, QAction
-from PyQt5.QtCore import QThread, pyqtSignal, Qt
+import json
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit, QProgressBar, QSystemTrayIcon, QMenu, QAction
 from PyQt5.QtCore import QThread, pyqtSignal, Qt
 from PyQt5.QtGui import QIcon, QPixmap, QPainter, QBrush
+import time
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 EPSILON = 1e-10
+CONFIG_FILE = "audio_receiver_config.json"
 
 class ReceiverThread(QThread):
     connection_status = pyqtSignal(bool)
@@ -30,41 +31,50 @@ class ReceiverThread(QThread):
         device_index = self.get_output_device_index(p, 'Cable Input')
         if device_index is None:
             print('Could not find Cable Input device')
+            self.connection_status.emit(False)
             return
 
         stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE,
                         output=True, output_device_index=device_index,
                         frames_per_buffer=CHUNK)
-
         print(f'Playing audio to: {p.get_device_info_by_index(device_index)["name"]}')
 
         while self.running:
             try:
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                    sock.settimeout(5)
                     sock.connect((self.host, self.port))
                     print(f'Connected to {self.host}:{self.port}')
                     self.connection_status.emit(True)
+
                     while self.running:
                         length = struct.unpack('!I', sock.recv(4))[0]
                         data = sock.recv(length)
                         if not data:
                             break
                         stream.write(data)
-                        
                         audio_data = np.frombuffer(data, dtype=np.int16)
                         rms = np.sqrt(np.mean(np.square(audio_data.astype(float))) + EPSILON)
                         db = 20 * np.log10(rms / 32767 + EPSILON)
                         self.volume_update.emit(db)
-            except ConnectionRefusedError:
+            except (ConnectionRefusedError, TimeoutError):
                 print(f'Could not connect to {self.host}:{self.port}. Retrying...')
                 self.connection_status.emit(False)
             except (ConnectionResetError, struct.error):
                 print('Server disconnected. Attempting to reconnect...')
                 self.connection_status.emit(False)
 
+            if self.running:
+                time.sleep(5)
+
         stream.stop_stream()
         stream.close()
         p.terminate()
+
+    def stop(self):
+        self.running = False
+        self.quit()
+        self.wait()
 
     def get_output_device_index(self, p, device_name):
         for i in range(p.get_device_count()):
@@ -77,6 +87,7 @@ class AudioReceiverGUI(QWidget):
         super().__init__()
         self.initUI()
         self.initSystemTray()
+        self.load_config()
 
     def initUI(self):
         self.setWindowTitle('Audio Receiver')
@@ -181,15 +192,17 @@ class AudioReceiverGUI(QWidget):
                 self.receiver_thread.start()
                 self.start_button.setText('Stop Receiving')
                 self.status_label.setText('Status: Connecting...')
+                self.save_config(host, port)
             except ValueError:
                 self.status_label.setText('Status: Invalid port number')
         else:
-            self.receiver_thread.running = False
-            self.receiver_thread.quit()
-            self.receiver_thread.wait()
+            if self.receiver_thread:
+                self.receiver_thread.stop()
+            self.receiver_thread = None
             self.start_button.setText('Start Receiving')
             self.status_label.setText('Status: Not Connected')
             self.volume_bar.setValue(0)
+
 
     def update_status(self, connected):
         if connected:
@@ -213,6 +226,22 @@ class AudioReceiverGUI(QWidget):
                                                   stop:0 red, stop:0.5 yellow, stop:1 green);
             }}
         """)
+
+    def load_config(self):
+        try:
+            with open(CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+                self.host_input.setText(config.get('host', ''))
+                self.port_input.setText(str(config.get('port', '')))
+                if config.get('host') and config.get('port'):
+                    self.toggle_receiving()
+        except FileNotFoundError:
+            pass
+
+    def save_config(self, host, port):
+        config = {'host': host, 'port': port}
+        with open(CONFIG_FILE, 'w') as f:
+            json.dump(config, f)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
